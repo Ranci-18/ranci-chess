@@ -5,6 +5,14 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: bisque;
+}
+
+body #root {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+
 }
 
 code {
