@@ -6,12 +6,16 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "assert": "^2.1.0",
     "chess.js": "^1.0.0-beta.6",
+    "path-browserify": "^1.0.1",
     "react": "^18.2.0",
     "react-chessboard": "^4.3.2",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "stockfish.wasm": "^0.10.0",
+    "stream-browserify": "^3.0.0",
+    "util": "^0.12.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -50,5 +54,12 @@
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1"
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false,
+    "perf_hooks": false,
+    "worker_threads": false
   }
 }

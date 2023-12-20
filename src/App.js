@@ -2,50 +2,33 @@ import './App.css';
 import React, { useState, useEffect } from 'react';
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
+import Stockfish from "stockfish.wasm";
 
 
 function App() {
   const [game, setGame] = useState(new Chess());
-  const [sfworker, setSfworker] = useState(null);
 
-  // using the web worker to initialize stockfish
   useEffect(() => {
-    const worker = new Worker('./Stockfish/stockfishWebWorker');
-
-    worker.postMessage({ type: 'init' });
-
-    setSfworker(worker);
-
-    return () => {
-      worker.terminate();
+    const initSf = async () => {
+      try {
+        const sf = await Stockfish();
+        sf.addMessageListener((line) => {
+          console.log(line);
+        });
+        sf.postMessage("uci");
+        sf.postMessage("ucinewgame");
+        sf.postMessage(`position fen ${game.fen()}`);
+        sf.postMessage(`go depth 10`);
+        sf.onmessage = (e) => {
+          console.log(e.data);
+        };
+      } catch (error) {
+        console.log(error);
+      }
     };
-  },[]);
 
-  // using the web worker to analyze the position
-  useEffect(() => {
-    const depth = 8;
-    if (sfworker) {
-      sfworker.postMessage({ type: 'analyze', fen: game.fen(), depth });
-
-      sfworker.onmessage = (event) => {
-        const { type, data } = event.data;
-
-        switch (type) {
-          case 'info':
-            console.log(data);
-            break;
-          case 'bestmove':
-            console.log('Best Move:', data);
-            break;
-          default:
-            break;
-        }
-      };
-    }
-    return () => {
-      sfworker.terminate();
-    };
-  }, [game, sfworker])
+    initSf();
+  })
 
 
   const handleMove = (sourceSquare, targetSquare) => {
@@ -66,7 +49,7 @@ function App() {
         onPieceMove={({ sourceSquare, targetSquare }) =>
           handleMove(sourceSquare, targetSquare)
         }
-        boardWidth={700}
+        boardWidth={650}
         showBoardNotation={true}
       />
     </div>
