@@ -2,55 +2,60 @@ import './App.css';
 import React, { useState, useEffect } from 'react';
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
-import Stockfish from "stockfish.wasm";
 
 
 function App() {
   const [game, setGame] = useState(new Chess());
+  const [isUserTurn, setIsUserTurn] = useState(true);
 
   useEffect(() => {
-    const initSf = async () => {
-      try {
-        const sf = await Stockfish();
-        sf.addMessageListener((line) => {
-          console.log(line);
-        });
-        sf.postMessage("uci");
-        sf.postMessage("ucinewgame");
-        sf.postMessage(`position fen ${game.fen()}`);
-        sf.postMessage(`go depth 10`);
-        sf.onmessage = (e) => {
-          console.log(e.data);
-        };
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    if (!isUserTurn && !game.isGameOver()) {
+      const intevalId = setInterval(() => {
+        makeRandomMove();
+      }, 3500);
 
-    initSf();
-  })
+      return () => {
+        clearInterval(intevalId);
+      };
+    }
+  }, [isUserTurn, game]);
 
 
-  const handleMove = (sourceSquare, targetSquare) => {
-    const move = game.move({
+
+  function makeRandomMove() {
+    if (game.isGameOver()) return;
+
+    const possibleMoves = game.moves();
+    if (possibleMoves.length === 0) {
+      alert('Game over');
+      return;
+    }
+    const randomIdx = Math.floor(Math.random() * possibleMoves.length);
+    game.move(possibleMoves[randomIdx]);
+    setGame(new Chess(game.fen()));
+    setIsUserTurn(true);
+  }
+
+  function onDrop(sourceSquare, targetSquare) {
+    let move = game.move({
       from: sourceSquare,
-      to: targetSquare,
-      promotion: 'q'
-    });
+      to: targetSquare
+    })
 
     if (move) {
       setGame(new Chess(game.fen()));
+      setIsUserTurn(false);
     }
-  };
+  }
+
   return (
     <div className="App">
       <Chessboard
         position={game.fen()}
-        onPieceMove={({ sourceSquare, targetSquare }) =>
-          handleMove(sourceSquare, targetSquare)
-        }
         boardWidth={650}
         showBoardNotation={true}
+        onPieceDrop={onDrop}
+        
       />
     </div>
   );
