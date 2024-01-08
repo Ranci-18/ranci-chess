@@ -119,6 +119,10 @@ function App() {
   
   return (
     <div className="App">
+      <nav className='navBar'>
+        <h1><b>Ranci</b>-<em>Chess</em></h1>
+      </nav>
+      <hr />
       <Chessboard
         position={game.fen()}
         boardWidth={350}
@@ -130,32 +134,34 @@ function App() {
         boardOrientation={boardOrientation}
       />
 
-      <button
-        onClick={() => {
-          const newGameInstance = new Chess();
-          setGame(newGameInstance);
-          setIsUserTurn(true);
-          setIsCheckmate(false);
-          setIsDraw(false);
-          setIsStalemate(false);
-        }}
-      >
-        New Game
-      </button>
-
-      <button
-        onClick={() => {
-          if (boardOrientation === 'white') {
-            setBoardOrientation('black');
-            setIsUserTurn(false);
-          } else {
-            setBoardOrientation('white');
+      <div className='buttons'>
+        <button
+          onClick={() => {
+            const newGameInstance = new Chess();
+            setGame(newGameInstance);
             setIsUserTurn(true);
-          }
-        }}
-      >
-        play as {boardOrientation === 'white' ? 'black' : 'white'}
-      </button>
+            setIsCheckmate(false);
+            setIsDraw(false);
+            setIsStalemate(false);
+          }}
+        >
+          New Game
+        </button>
+
+        <button
+          onClick={() => {
+            if (boardOrientation === 'white') {
+              setBoardOrientation('black');
+              setIsUserTurn(false);
+            } else {
+              setBoardOrientation('white');
+              setIsUserTurn(true);
+            }
+          }}
+        >
+          play as {boardOrientation === 'white' ? 'black' : 'white'}
+        </button>
+      </div>
 
       <div className='inGameplay'>
        <h2>Game Progress</h2>

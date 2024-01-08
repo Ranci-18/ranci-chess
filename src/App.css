@@ -24,3 +24,13 @@
     margin-left: -5%;
   }
 }
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2%;
+}
+
+.navBar {
+  padding: 0;
+}
