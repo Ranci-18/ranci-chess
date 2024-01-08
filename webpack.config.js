@@ -52,5 +52,10 @@ module.exports = {
             "perf_hooks": path.resolve(__dirname, "src/empty-module.js"),
             "worker_threads": path.resolve(__dirname, "src/empty-module.js"),
         }
+    },
+    performance: {
+        hints: false,
+        maxEntrypointSize: 512000,
+        maxAssetSize: 512000
     }
 }
