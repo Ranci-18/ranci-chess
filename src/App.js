@@ -135,6 +135,9 @@ function App() {
           const newGameInstance = new Chess();
           setGame(newGameInstance);
           setIsUserTurn(true);
+          setIsCheckmate(false);
+          setIsDraw(false);
+          setIsStalemate(false);
         }}
       >
         New Game
