@@ -175,6 +175,15 @@ function App() {
       >
         <h2>Checkmate!</h2>
         <p>Game Over!</p>
+        <button
+        onClick={() => {
+          const newGameInstance = new Chess();
+          setGame(newGameInstance);
+          setIsUserTurn(true);
+        }}
+      >
+        New Game
+      </button>
       </Modal>
 
       <Modal
@@ -192,6 +201,15 @@ function App() {
       >
         <h2>Draw!</h2>
         <p>Game Over!</p>
+        <button
+        onClick={() => {
+          const newGameInstance = new Chess();
+          setGame(newGameInstance);
+          setIsUserTurn(true);
+        }}
+      >
+        New Game
+      </button>
       </Modal>
 
       <Modal
@@ -209,6 +227,15 @@ function App() {
       >
         <h2>Stalemate!</h2>
         <p>Game Over!</p>
+        <button
+        onClick={() => {
+          const newGameInstance = new Chess();
+          setGame(newGameInstance);
+          setIsUserTurn(true);
+        }}
+      >
+        New Game
+      </button>
       </Modal>
     </div>
   );
