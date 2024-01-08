@@ -21,8 +21,22 @@ function App() {
 
   useEffect(() => {
     if (!isUserTurn && !game.isGameOver()) {
+      var stockfish = new Worker('stockfish.js');
+      const fen = game.fen();
+      let bMove;
+
+      stockfish.addEventListener('message', function (e) {
+        const bestMove = e.data.match(/bestmove\s+(\S+)/)?.[1];
+        console.log('bestMove', bestMove);
+        bMove = bestMove;
+      });
+
+      stockfish.postMessage('uci');
+      stockfish.postMessage(`position fen ${fen}`);
+      stockfish.postMessage('go depth 10');
+
       const intevalId = setInterval(() => {
-        makeRandomMove();
+        makeBestMove(bMove);
       }, 3500);
 
       return () => {
@@ -33,17 +47,49 @@ function App() {
 
 
 
-  function makeRandomMove() {
-    const possibleMoves = game.moves();
-    if (possibleMoves.length === 0) {
-      alert('Game over');
-      return;
-    }
-    const randomIdx = Math.floor(Math.random() * possibleMoves.length);
-    game.move(possibleMoves[randomIdx]);
-    setGame(new Chess(game.fen()));
-    setIsUserTurn(true);
+  function makeBestMove(moveString) {
+    function convertMoveStringToSquares(string) {
+      const fileMap = {
+        'a': 'a',
+        'b': 'b',
+        'c': 'c',
+        'd': 'd',
+        'e': 'e',
+        'f': 'f',
+        'g': 'g',
+        'h': 'h'
+      };
+      
+      const rankMap = {
+        '8': '8',
+        '7': '7',
+        '6': '6',
+        '5': '5',
+        '4': '4',
+        '3': '3',
+        '2': '2',
+        '1': '1'
+      };
 
+      const sourceSquare = `${fileMap[string[0]]}${rankMap[string[1]]}`;
+      const targetSquare = `${fileMap[string[2]]}${rankMap[string[3]]}`;
+
+      return [sourceSquare, targetSquare];
+    }
+
+    const [sourceSquare, targetSquare] = convertMoveStringToSquares(moveString);
+      
+    const move = game.move({
+      from: sourceSquare,
+      to: targetSquare,
+      promotion: "q"
+    });
+    
+    if (move) {
+      setGame(new Chess(game.fen()));
+      setIsUserTurn(true);
+    }
+    
     if (game.isGameOver()) {
       if (game.isStalemate()) {
         setIsStalemate(true);
@@ -52,9 +98,10 @@ function App() {
       } else if (game.isDraw()) {
         setIsDraw(true);
       }
-      
+          
       return;
-      }
+    }
+
   }
 
   function onDrop(sourceSquare, targetSquare) {
