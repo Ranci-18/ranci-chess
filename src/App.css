@@ -32,5 +32,14 @@
 }
 
 .navBar {
+  display: flex;
   padding: 0;
+  justify-content: center;
+  align-items: center;
+}
+
+.navBar button {
+  width: fit-content;
+  height: fit-content;
+  margin-left: 15%;
 }

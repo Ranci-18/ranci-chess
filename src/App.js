@@ -13,6 +13,7 @@ function App() {
   const [isDraw, setIsDraw] = useState(false);
   const [isStalemate, setIsStalemate] = useState(false);
   const [boardOrientation, setBoardOrientation] = useState('white');
+  const [loadPositionToPlay, setLoadPositionToPlay] = useState(false);
   
   let depthRef = useRef({ current: 0});
   let cpScoreRef = useRef({ current: 0});
@@ -104,6 +105,8 @@ function App() {
       var stockfish = new Worker('stockfish.js');
 
       stockfish.addEventListener('message', function (e) {
+        const bestMove = e.data.match(/bestmove\s+(\S+)/)?.[1];
+        console.log('bestMove', bestMove);
         const data = extractCPandDepthData(e.data);
         if (data) {
           stockfishDataObjRef.current = data;
@@ -121,47 +124,100 @@ function App() {
     <div className="App">
       <nav className='navBar'>
         <h1><b>Ranci</b>-<em>Chess</em></h1>
+        <button
+          onClick={() => {
+            setLoadPositionToPlay(!loadPositionToPlay);
+          }}
+        >
+          {loadPositionToPlay ? 'Back to Play' : 'Load Position to Play'}
+        </button>
       </nav>
       <hr />
-      <Chessboard
-        position={game.fen()}
-        boardWidth={350}
-        showBoardNotation={true}
-        onPieceDrop={onDrop}
-        arePiecesDraggable={isUserTurn}
-        areArrowsAllowed={true}
-        arePremovesAllowed={true}
-        boardOrientation={boardOrientation}
-      />
+      {
+        loadPositionToPlay ?
+          <div className='loadPosition'>
+            <p>Enter FEN string of the position you want to play</p>
+            <input
+              type='text'
+              placeholder='Enter FEN string'
+              onChange={(e) => {
+                const fen = e.target.value || 'r1bq1rk1/pp1n1ppp/2p1pn2/3p4/2PP4/1P2PN2/P4PPP/RNBQ1RK1 w - - 4 11';
+                const newGameInstance = new Chess(fen);
+                setGame(newGameInstance);
+                setIsUserTurn(true);
+                setIsCheckmate(false);
+                setIsDraw(false);
+                setIsStalemate(false);
+              }}
+            />
+              <Chessboard
+                position={game.fen()}
+                boardWidth={350}
+                showBoardNotation={true}
+                onPieceDrop={onDrop}
+                arePiecesDraggable={isUserTurn}
+                areArrowsAllowed={true}
+                arePremovesAllowed={true}
+                boardOrientation={boardOrientation}
+              />
 
-      <div className='buttons'>
-        <button
-          onClick={() => {
-            const newGameInstance = new Chess();
-            setGame(newGameInstance);
-            setIsUserTurn(true);
-            setIsCheckmate(false);
-            setIsDraw(false);
-            setIsStalemate(false);
-          }}
-        >
-          New Game
-        </button>
-
-        <button
-          onClick={() => {
-            if (boardOrientation === 'white') {
-              setBoardOrientation('black');
-              setIsUserTurn(false);
-            } else {
-              setBoardOrientation('white');
-              setIsUserTurn(true);
-            }
-          }}
-        >
-          play as {boardOrientation === 'white' ? 'black' : 'white'}
-        </button>
-      </div>
+              <button
+              onClick={() => {
+                if (boardOrientation === 'white') {
+                  setBoardOrientation('black');
+                  setIsUserTurn(false);
+                } else {
+                  setBoardOrientation('white');
+                  setIsUserTurn(true);
+                }
+              }}
+            >
+              play as {boardOrientation === 'white' ? 'black' : 'white'}
+            </button>
+          </div> :
+          <div className='playGame'>
+          <Chessboard
+            position={game.fen()}
+            boardWidth={350}
+            showBoardNotation={true}
+            onPieceDrop={onDrop}
+            arePiecesDraggable={isUserTurn}
+            areArrowsAllowed={true}
+            arePremovesAllowed={true}
+            boardOrientation={boardOrientation}
+          />
+  
+          <div className='buttons'>
+            <button
+              onClick={() => {
+                const newGameInstance = new Chess();
+                setGame(newGameInstance);
+                setIsUserTurn(true);
+                setIsCheckmate(false);
+                setIsDraw(false);
+                setIsStalemate(false);
+              }}
+            >
+              New Game
+            </button>
+  
+            <button
+              onClick={() => {
+                if (boardOrientation === 'white') {
+                  setBoardOrientation('black');
+                  setIsUserTurn(false);
+                } else {
+                  setBoardOrientation('white');
+                  setIsUserTurn(true);
+                }
+              }}
+            >
+              play as {boardOrientation === 'white' ? 'black' : 'white'}
+            </button>
+          </div>
+        </div>
+      }
+      
 
       <div className='inGameplay'>
        <h2>Game Progress</h2>
