@@ -304,9 +304,6 @@ function App() {
                     >
                       play as {boardOrientation === 'white' ? 'black' : 'white'}
                     </button>
-                    <button onClick={() => setIsUserLoggedIn(false)}>
-                      Logout
-                    </button>
                   </div>
 
                   <div className='inGameplay'>
@@ -314,6 +311,9 @@ function App() {
                     <p><b>Depth of analysis: </b>{stockfishDataObjRef.current.depth}</p>
                     <p><b>CentiPawn Score: </b>{stockfishDataObjRef.current.cpScore}</p>
                   </div>
+                  <button onClick={() => setIsUserLoggedIn(false)}>
+                    Logout
+                  </button>
                 </div>
 
                 
