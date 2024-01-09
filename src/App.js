@@ -14,6 +14,7 @@ function App() {
   const [isStalemate, setIsStalemate] = useState(false);
   const [boardOrientation, setBoardOrientation] = useState('white');
   const [loadPositionToPlay, setLoadPositionToPlay] = useState(false);
+  const [stockfishDepth, setStockfishDepth] = useState(1);
   
   let depthRef = useRef({ current: 0});
   let cpScoreRef = useRef({ current: 0});
@@ -32,7 +33,7 @@ function App() {
 
       stockfish.postMessage('uci');
       stockfish.postMessage(`position fen ${fen}`);
-      stockfish.postMessage('go depth 1');
+      stockfish.postMessage(`go depth ${stockfishDepth}`);
 
       const intevalId = setInterval(() => {
         makeBestMove(bMove);
@@ -172,6 +173,11 @@ function App() {
                 setIsStalemate(false);
               }}
             />
+            <div className='gameplayLevels'>
+              <button onClick={() => setStockfishDepth(1)}>Beginner</button>
+              <button onClick={() => setStockfishDepth(2)}>Intermediate</button>
+              <button onClick={() => setStockfishDepth(5)}>Intermediate-Advanced</button>
+            </div>
               <Chessboard
                 position={game.fen()}
                 boardWidth={350}
@@ -198,6 +204,11 @@ function App() {
             </button>
           </div> :
           <div className='playGame'>
+          <div className='gameplayLevels'>
+            <button onClick={() => setStockfishDepth(1)}>Beginner</button>
+            <button onClick={() => setStockfishDepth(2)}>Intermediate</button>
+            <button onClick={() => setStockfishDepth(5)}>Intermediate-Advanced</button>
+          </div>
           <Chessboard
             position={game.fen()}
             boardWidth={350}

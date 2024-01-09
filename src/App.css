@@ -43,3 +43,9 @@
   height: fit-content;
   margin-left: 15%;
 }
+
+.gameplayLevels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2%;
+}
