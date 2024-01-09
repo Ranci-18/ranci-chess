@@ -27,13 +27,12 @@ function App() {
 
       stockfish.addEventListener('message', function (e) {
         const bestMove = e.data.match(/bestmove\s+(\S+)/)?.[1];
-        console.log('bestMove', bestMove);
         bMove = bestMove;
       });
 
       stockfish.postMessage('uci');
       stockfish.postMessage(`position fen ${fen}`);
-      stockfish.postMessage('go depth 10');
+      stockfish.postMessage('go depth 1');
 
       const intevalId = setInterval(() => {
         makeBestMove(bMove);
@@ -49,30 +48,8 @@ function App() {
 
   function makeBestMove(moveString) {
     function convertMoveStringToSquares(string) {
-      const fileMap = {
-        'a': 'a',
-        'b': 'b',
-        'c': 'c',
-        'd': 'd',
-        'e': 'e',
-        'f': 'f',
-        'g': 'g',
-        'h': 'h'
-      };
-      
-      const rankMap = {
-        '8': '8',
-        '7': '7',
-        '6': '6',
-        '5': '5',
-        '4': '4',
-        '3': '3',
-        '2': '2',
-        '1': '1'
-      };
-
-      const sourceSquare = `${fileMap[string[0]]}${rankMap[string[1]]}`;
-      const targetSquare = `${fileMap[string[2]]}${rankMap[string[3]]}`;
+      const sourceSquare = string[0] + string[1];
+      const targetSquare = string[2] + string[3];
 
       return [sourceSquare, targetSquare];
     }
@@ -82,7 +59,7 @@ function App() {
     const move = game.move({
       from: sourceSquare,
       to: targetSquare,
-      promotion: "q"
+      promotion: 'q'
     });
     
     if (move) {
@@ -108,7 +85,7 @@ function App() {
     let move = game.move({
       from: sourceSquare,
       to: targetSquare,
-      promotion: "q"
+      promotion: 'q'
     })
 
     if (move) {
@@ -152,8 +129,6 @@ function App() {
       var stockfish = new Worker('stockfish.js');
 
       stockfish.addEventListener('message', function (e) {
-        const bestMove = e.data.match(/bestmove\s+(\S+)/)?.[1];
-        console.log('bestMove', bestMove);
         const data = extractCPandDepthData(e.data);
         if (data) {
           stockfishDataObjRef.current = data;
