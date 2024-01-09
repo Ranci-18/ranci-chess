@@ -1,17 +1,26 @@
 import React from 'react';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { app } from './firebase';
+import { app, db } from './firebase';
 import './Signup.css';
+import { setDoc, doc } from "firebase/firestore";
 
 export default function Signup({ onSignup }) {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     
+    function goToLogin() {
+        onSignup(false);
+    }
 
     async function handleSignup() {
         const auth = getAuth(app);
         try {
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const { user } = await createUserWithEmailAndPassword(auth, email, password);
+            if (user) {
+                await setDoc(doc(db, "users", user.uid), {
+                    email: user.email,
+                })
+            }
             onSignup(true);
             setEmail('');
             setPassword('');
@@ -45,7 +54,7 @@ export default function Signup({ onSignup }) {
         <br />
         <button type='button' onClick={handleSignup}>Sign Up</button>
         or:
-        <button onClick={() => onSignup(true)}>Go to Login</button>
+        <button onClick={goToLogin}>Go to Login</button>
     </div>
   )
 }

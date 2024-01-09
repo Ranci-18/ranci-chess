@@ -400,7 +400,7 @@ function App() {
         ) :
         (
           isNewUser ?
-            <Signup onSignup={handleSignup} /> : <Login onLogin={handleLogin} />
+            <Signup onSignup={handleSignup} /> : <Login onLogin={handleLogin} onSignup={handleSignup} />
         )
       }
     </div>

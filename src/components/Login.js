@@ -3,10 +3,13 @@ import './Login.css';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { app } from './firebase';
 
-export default function Login({ onLogin }) {
+export default function Login({ onLogin, onSignup }) {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     
+    function goToSignup() {
+        onSignup(true);
+    }
 
     async function handleLogin() {
         const auth = getAuth(app);
@@ -46,6 +49,8 @@ export default function Login({ onLogin }) {
         >
             Login
         </button>
+        or:
+        <button onClick={goToSignup}>Go to Signup</button>
     </div>
   )
 }
