@@ -4,20 +4,44 @@
 }
 
 :root {
-  --board-width: 350px;
+  --board-width: 200px;
 }
 
 
 @media screen and (max-width: 768px) {
   :root {
-    --board-width: 500px;
+    --board-width: 300px;
   }
 
 }
 
 @media screen and (min-width: 1024px) {
   :root {
-    --board-width: 700px;
+    --board-width: 600px;
+  }
+
+  .playGame,
+  .loadPosition {
+    display: flex;
+  }
+
+  .loadPositionInput {
+    flex-direction: column;
+  } 
+
+  .loadPosition input {
+    height: fit-content;
+  }
+
+  .playGame button,
+  .loadPosition button {
+    height: fit-content;
+    margin: 1em;
+  }
+
+  .whiteBlackButton,
+  .newGameButton {
+    margin-left: -10em;
   }
 }
 

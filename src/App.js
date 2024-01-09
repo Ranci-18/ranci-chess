@@ -8,7 +8,7 @@ import Homepage from './components/Homepage';
 Modal.setAppElement('#root');
 
 function App() {
-  const [boardWidth, setBoardWidth] = useState(350);
+  const [boardWidth, setBoardWidth] = useState(200);
   const [game, setGame] = useState(new Chess());
   const [isUserTurn, setIsUserTurn] = useState(true);
   const [isCheckmate, setIsCheckmate] = useState(false);
@@ -163,15 +163,18 @@ function App() {
             setIsUserInHomepage(!isUserInHomepage);
           }}
         >
-          {isUserInHomepage ? 'Back to Play' : 'Go to Homepage'}
+          {isUserInHomepage ? 'Play a Game' : 'Go to Homepage'}
         </button>
-        <button
-          onClick={() => {
-            setLoadPositionToPlay(!loadPositionToPlay);
-          }}
-        >
+        {
+          isUserInHomepage ||
+          (<button
+            onClick={() => {
+              setLoadPositionToPlay(!loadPositionToPlay);
+            }}
+          >
           {loadPositionToPlay ? 'Back to Play' : 'Load Position to Play'}
-        </button>
+          </button>)
+        }
       </nav>
       <hr />
       {
@@ -180,25 +183,28 @@ function App() {
           (
             loadPositionToPlay ?
               <div className='loadPosition'>
-                <p>Enter FEN string of the position you want to play</p>
-                <input
-                  type='text'
-                  placeholder='Enter FEN string'
-                  onChange={(e) => {
-                    const fen = e.target.value || 'r1bq1rk1/pp1n1ppp/2p1pn2/3p4/2PP4/1P2PN2/P4PPP/RNBQ1RK1 w - - 4 11';
-                    const newGameInstance = new Chess(fen);
-                    setGame(newGameInstance);
-                    setIsUserTurn(true);
-                    setIsCheckmate(false);
-                    setIsDraw(false);
-                    setIsStalemate(false);
-                  }}
-                />
-                <div className='gameplayLevels'>
-                  <button onClick={() => setStockfishDepth(1)}>Beginner</button>
-                  <button onClick={() => setStockfishDepth(2)}>Intermediate</button>
-                  <button onClick={() => setStockfishDepth(5)}>Intermediate-Advanced</button>
+                <div className='loadPositionInput'>
+                  <p>Enter FEN string of the position you want to play</p>
+                  <input
+                    type='text'
+                    placeholder='Enter FEN string'
+                    onChange={(e) => {
+                      const fen = e.target.value || 'r1bq1rk1/pp1n1ppp/2p1pn2/3p4/2PP4/1P2PN2/P4PPP/RNBQ1RK1 w - - 4 11';
+                      const newGameInstance = new Chess(fen);
+                      setGame(newGameInstance);
+                      setIsUserTurn(true);
+                      setIsCheckmate(false);
+                      setIsDraw(false);
+                      setIsStalemate(false);
+                    }}
+                  />
+                  <div className='gameplayLevels'>
+                    <button onClick={() => setStockfishDepth(1)}>Beginner</button>
+                    <button onClick={() => setStockfishDepth(2)}>Intermediate</button>
+                    <button onClick={() => setStockfishDepth(5)}>Intermediate-Advanced</button>
+                  </div>
                 </div>
+                
                   <Chessboard
                     position={game.fen()}
                     boardWidth={boardWidth}
@@ -223,88 +229,98 @@ function App() {
                 >
                   play as {boardOrientation === 'white' ? 'black' : 'white'}
                 </button>
+
+                <div className='inGameplay'>
+                  <h2>Game Progress</h2>
+                  <p><b>Depth of analysis: </b>{stockfishDataObjRef.current.depth}</p>
+                  <p><b>CentiPawn Score: </b>{stockfishDataObjRef.current.cpScore}</p>
+                </div>
               </div> :
               <>
                 <div className='playGame'>
-                <div className='gameplayLevels'>
-                  <button onClick={() => setStockfishDepth(1)}>Beginner</button>
-                  <button onClick={() => setStockfishDepth(2)}>Intermediate</button>
-                  <button onClick={() => setStockfishDepth(5)}>Intermediate-Advanced</button>
-                </div>
-                <Chessboard
-                  position={game.fen()}
-                  boardWidth={boardWidth}
-                  showBoardNotation={true}
-                  onPieceDrop={onDrop}
-                  arePiecesDraggable={isUserTurn}
-                  areArrowsAllowed={true}
-                  arePremovesAllowed={true}
-                  boardOrientation={boardOrientation}
-                />
-        
-                <div className='buttons'>
-                  <button
-                    onClick={() => {
-                      const newGameInstance = new Chess();
-                      setGame(newGameInstance);
-                      setIsUserTurn(true);
-                      setIsCheckmate(false);
-                      setIsDraw(false);
-                      setIsStalemate(false);
-                    }}
-                  >
-                    New Game
-                  </button>
-        
-                  <button
-                    onClick={() => {
-                      if (boardOrientation === 'white') {
-                        setBoardOrientation('black');
-                        setIsUserTurn(false);
-                      } else {
-                        setBoardOrientation('white');
+                  <div className='gameplayLevels'>
+                    <button onClick={() => setStockfishDepth(1)}>Beginner</button>
+                    <button onClick={() => setStockfishDepth(2)}>Intermediate</button>
+                    <button onClick={() => setStockfishDepth(5)}>Intermediate-Advanced</button>
+                  </div>
+                  <Chessboard
+                    position={game.fen()}
+                    boardWidth={boardWidth}
+                    showBoardNotation={true}
+                    onPieceDrop={onDrop}
+                    arePiecesDraggable={isUserTurn}
+                    areArrowsAllowed={true}
+                    arePremovesAllowed={true}
+                    boardOrientation={boardOrientation}
+                  />
+          
+                  <div className='buttons'>
+                    <button
+                      onClick={() => {
+                        const newGameInstance = new Chess();
+                        setGame(newGameInstance);
                         setIsUserTurn(true);
-                      }
-                    }}
-                  >
-                    play as {boardOrientation === 'white' ? 'black' : 'white'}
-                  </button>
+                        setIsCheckmate(false);
+                        setIsDraw(false);
+                        setIsStalemate(false);
+                      }}
+                      className='newGameButton'
+                    >
+                      New Game
+                    </button>
+          
+                    <button
+                      onClick={() => {
+                        if (boardOrientation === 'white') {
+                          setBoardOrientation('black');
+                          setIsUserTurn(false);
+                        } else {
+                          setBoardOrientation('white');
+                          setIsUserTurn(true);
+                        }
+                      }}
+                      className='whiteBlackButton'
+                    >
+                      play as {boardOrientation === 'white' ? 'black' : 'white'}
+                    </button>
+                  </div>
+
+                  <div className='inGameplay'>
+                    <h2>Game Progress</h2>
+                    <p><b>Depth of analysis: </b>{stockfishDataObjRef.current.depth}</p>
+                    <p><b>CentiPawn Score: </b>{stockfishDataObjRef.current.cpScore}</p>
+                  </div>
                 </div>
-              </div>
 
-              <div className='inGameplay'>
-                <h2>Game Progress</h2>
-                <p><b>Depth of analysis: </b>{stockfishDataObjRef.current.depth}</p>
-                <p><b>CentiPawn Score: </b>{stockfishDataObjRef.current.cpScore}</p>
-              </div>
+                
 
-              <Modal
-                isOpen={isCheckmate}
-                onRequestClose={() => setIsCheckmate(false)}
-                style={{
-                  overlay: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-                    height: '50%',
-                  },
-                  content: {
-                    color: 'black'
-                  }
-                }}
-                >
-                <h2>Checkmate!</h2>
-                <p>Game Over!</p>
-                <button
-                onClick={() => {
-                  const newGameInstance = new Chess();
-                  setGame(newGameInstance);
-                  setIsUserTurn(true);
-                }}
-                >
-                 New Game
-                </button>
-              </Modal>
+                <Modal
+                  isOpen={isCheckmate}
+                  onRequestClose={() => setIsCheckmate(false)}
+                  style={{
+                    overlay: {
+                      backgroundColor: 'rgba(0, 0, 0, 0.75)',
+                      height: '50%',
+                    },
+                    content: {
+                      color: 'black'
+                    }
+                  }}
+                  >
+                  <h2>Checkmate!</h2>
+                  <p>Game Over!</p>
+                  <button
+                  onClick={() => {
+                    const newGameInstance = new Chess();
+                    setGame(newGameInstance);
+                    setIsUserTurn(true);
+                  }}
+                  >
+                  New Game
+                  </button>
+                </Modal>
 
-              <Modal
+                <Modal
                 isOpen={isDraw}
                 onRequestClose={() => setIsDraw(false)}
                 style={{
@@ -317,43 +333,43 @@ function App() {
                   }
                 }}
                 >
-                <h2>Draw!</h2>
-                <p>Game Over!</p>
+                  <h2>Draw!</h2>
+                  <p>Game Over!</p>
                 <button
-                onClick={() => {
-                  const newGameInstance = new Chess();
-                  setGame(newGameInstance);
-                  setIsUserTurn(true);
-                }}
+                  onClick={() => {
+                    const newGameInstance = new Chess();
+                    setGame(newGameInstance);
+                    setIsUserTurn(true);
+                  }}
                 >
-                New Game
-                </button>
-              </Modal>
+                  New Game
+                  </button>
+                </Modal>
 
-              <Modal
-                isOpen={isStalemate}
-                onRequestClose={() => setIsStalemate(false)}
-                style={{
-                  overlay: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-                    height: '50%',
-                  },
-                  content: {
-                    color: 'black'
-                  }
-                }}
-                >
-                <h2>Stalemate!</h2>
-                <p>Game Over!</p>
-                <button
-                onClick={() => {
-                  const newGameInstance = new Chess();
-                  setGame(newGameInstance);
-                  setIsUserTurn(true);
-                }}
-                >
-                New Game
-                </button>
+                <Modal
+                  isOpen={isStalemate}
+                  onRequestClose={() => setIsStalemate(false)}
+                  style={{
+                    overlay: {
+                      backgroundColor: 'rgba(0, 0, 0, 0.75)',
+                      height: '50%',
+                    },
+                    content: {
+                      color: 'black'
+                    }
+                  }}
+                  >
+                  <h2>Stalemate!</h2>
+                  <p>Game Over!</p>
+                  <button
+                    onClick={() => {
+                      const newGameInstance = new Chess();
+                      setGame(newGameInstance);
+                      setIsUserTurn(true);
+                    }}
+                  >
+                    New Game
+                  </button>
               </Modal>
             </>
           )
