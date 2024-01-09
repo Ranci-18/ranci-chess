@@ -178,9 +178,6 @@ function App() {
     <div className="App">
       <nav className='navBar'>
         <h1><u>Ranci</u>-<em>Chess</em></h1>
-        <button onClick={() => setIsUserLoggedIn(false)}>
-          Logout
-        </button>
         <button
           onClick={() => {
             setIsUserInHomepage(!isUserInHomepage);
@@ -306,6 +303,9 @@ function App() {
                       className='whiteBlackButton'
                     >
                       play as {boardOrientation === 'white' ? 'black' : 'white'}
+                    </button>
+                    <button onClick={() => setIsUserLoggedIn(false)}>
+                      Logout
                     </button>
                   </div>
 
