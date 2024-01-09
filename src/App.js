@@ -4,6 +4,8 @@ import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
 import Modal from 'react-modal';
 import Homepage from './components/Homepage';
+import Signup from './components/Signup';
+import Login from './components/Login';
 
 Modal.setAppElement('#root');
 
@@ -18,6 +20,8 @@ function App() {
   const [loadPositionToPlay, setLoadPositionToPlay] = useState(false);
   const [stockfishDepth, setStockfishDepth] = useState(1);
   const [isUserInHomepage, setIsUserInHomepage] = useState(true);
+  const [isNewUser, setIsNewUser] = useState(false);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   
   let depthRef = useRef({ current: 0});
   let cpScoreRef = useRef({ current: 0});
@@ -143,7 +147,6 @@ function App() {
         return null;
       }
  
-
       var stockfish = new Worker('stockfish.js');
 
       stockfish.addEventListener('message', function (e) {
@@ -163,17 +166,27 @@ function App() {
     }
   }, [game])
 
+  function handleSignup(status) {
+    setIsNewUser(status);
+  }
+
+  function handleLogin(status) {
+    setIsUserLoggedIn(status);
+  }
   
   return (
     <div className="App">
       <nav className='navBar'>
         <h1><u>Ranci</u>-<em>Chess</em></h1>
+        <button onClick={() => setIsUserLoggedIn(false)}>
+          Logout
+        </button>
         <button
           onClick={() => {
             setIsUserInHomepage(!isUserInHomepage);
           }}
         >
-          {isUserInHomepage ? 'Play a Game' : 'Go to Homepage'}
+          {isUserLoggedIn ? isUserInHomepage ? 'Play a Game' : 'Go to Homepage' : null}
         </button>
         {
           isUserInHomepage ||
@@ -188,7 +201,8 @@ function App() {
       </nav>
       <hr />
       {
-        isUserInHomepage ?
+        isUserLoggedIn ?
+        (isUserInHomepage ?
           <Homepage /> :
           (
             loadPositionToPlay ?
@@ -383,6 +397,11 @@ function App() {
               </Modal>
             </>
           )
+        ) :
+        (
+          isNewUser ?
+            <Signup onSignup={handleSignup} /> : <Login onLogin={handleLogin} />
+        )
       }
     </div>
   );

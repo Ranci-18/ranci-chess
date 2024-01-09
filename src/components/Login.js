@@ -1,13 +1,51 @@
-import React from 'react'
+import React from 'react';
+import './Login.css';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { app } from './firebase';
 
-export default function Login() {
+export default function Login({ onLogin }) {
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('');
+    
+
+    async function handleLogin() {
+        const auth = getAuth(app);
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            onLogin(true);
+            setEmail('');
+            setPassword('');
+        } catch (error) {
+            alert(`${error.code}, ${error.message}`);
+        }
+    }
   return (
-    <label htmlFor='login'>
-        Email:
-        <input id='login' type='email' placeholder='email' />
-        Password:
-        <input id='login' type='password' placeholder='password' /> 
-        <button type='button'>Login</button>
-    </label>
+    <div className='login'>
+        <h1>Login</h1>
+        <br />
+        <label htmlFor='email'>
+            Email:
+            <br />
+            <input id='email' type='email' placeholder='email'
+                value={email}
+                onChange={event => setEmail(event.target.value)}
+            />
+        </label>
+        <br />
+        <label htmlFor='password'>
+            Password:
+            <br />
+            <input id='password' type='password' placeholder='password' 
+                value={password}
+                onChange={event => setPassword(event.target.value)}
+            />
+        </label>
+        <br />
+        <button type='button' 
+            onClick={handleLogin}
+        >
+            Login
+        </button>
+    </div>
   )
 }
