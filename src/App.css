@@ -39,9 +39,17 @@
     margin: 1em;
   }
 
-  .whiteBlackButton,
-  .newGameButton {
-    margin-left: -10em;
+  .buttons .whiteBlackButton {
+    margin-top: -1em;
+  }
+
+  .buttons .newGameButton {
+   
+    margin-top: -1em;
+  }
+
+  .inGameplay {
+    margin-top: -1em;
   }
 }
 
@@ -68,4 +76,10 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 2%;
+}
+
+button:active {
+  background-color: burlywood;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
 }

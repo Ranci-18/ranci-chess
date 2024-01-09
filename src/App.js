@@ -52,13 +52,15 @@ function App() {
 
       return () => {
         clearInterval(intevalId);
+        stockfish.terminate();
       };
     }
-  }, [isUserTurn, game]);
+  }, [isUserTurn, game, stockfishDepth]);
 
 
 
   function makeBestMove(moveString) {
+    let move;
     function convertMoveStringToSquares(string) {
       const sourceSquare = string[0] + string[1];
       const targetSquare = string[2] + string[3];
@@ -67,12 +69,10 @@ function App() {
     }
 
     const [sourceSquare, targetSquare] = convertMoveStringToSquares(moveString);
-      
-    const move = game.move({
-      from: sourceSquare,
-      to: targetSquare,
-      promotion: 'q'
-    });
+    
+    move = game.move({ from: sourceSquare, to: targetSquare, promotion: 'q' });
+
+    
     
     if (move) {
       setGame(new Chess(game.fen()));
@@ -94,15 +94,21 @@ function App() {
   }
 
   function onDrop(sourceSquare, targetSquare) {
-    let move = game.move({
-      from: sourceSquare,
-      to: targetSquare,
-      promotion: 'q'
-    })
+    try {
+      let move = game.move({
+        from: sourceSquare,
+        to: targetSquare,
+        promotion: 'q'
+      });
 
-    if (move) {
+      if (move) {
+        setGame(new Chess(game.fen()));
+        setIsUserTurn(false);
+      }
+    } catch (error) {
+      alert('Invalid move!');
+      game.undo();
       setGame(new Chess(game.fen()));
-      setIsUserTurn(false);
     }
     if (game.isGameOver()) {
       if (game.isStalemate()) {
@@ -150,6 +156,10 @@ function App() {
       stockfish.postMessage('uci');
       stockfish.postMessage(`position fen ${fen}`);
       stockfish.postMessage('go depth 10');
+    }
+
+    return () => {
+      stockfish.terminate();
     }
   }, [game])
 
