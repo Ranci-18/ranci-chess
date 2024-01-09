@@ -1,27 +1,23 @@
 .App {
   padding: 0;
-  width: min-content;
+  width: fit-content;
 }
 
-@media screen and (max-width: 320px) {
-  .App {
-    margin-top: -15%;
-    margin-left: -5%;
-  }
+:root {
+  --board-width: 350px;
 }
+
 
 @media screen and (max-width: 768px) {
-  .App {
-    margin-top: -15%;
-    margin-left: -5%;
+  :root {
+    --board-width: 500px;
   }
 
 }
 
 @media screen and (min-width: 1024px) {
-  .App {
-    margin-top: -15%;
-    margin-left: -5%;
+  :root {
+    --board-width: 700px;
   }
 }
 
@@ -34,14 +30,14 @@
 .navBar {
   display: flex;
   padding: 0;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
 }
 
 .navBar button {
   width: fit-content;
   height: fit-content;
   margin-left: 15%;
+  margin-top: 1.5%;
 }
 
 .gameplayLevels {
