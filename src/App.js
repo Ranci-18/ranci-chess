@@ -37,10 +37,8 @@ function App() {
 
   useEffect(() => {
     if (!isUserTurn && !game.isGameOver()) {
-      var wasmSupported = typeof WebAssembly === 'object' && WebAssembly.validate(Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00));
- 
-      var stockfish = new Worker(wasmSupported ? 'stockfish.wasm.js' : 'stockfish.js');
-
+      
+      var stockfish = new Worker('stockfish.js');
       const fen = game.fen();
       let bMove;
 
@@ -150,10 +148,7 @@ function App() {
         return null;
       }
  
-      var wasmSupported = typeof WebAssembly === 'object' && WebAssembly.validate(Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00));
- 
-      var stockfish = new Worker(wasmSupported ? 'stockfish.wasm.js' : 'stockfish.js');
-
+      var stockfish = new Worker('stockfish.js');
 
       stockfish.addEventListener('message', function (e) {
         const data = extractCPandDepthData(e.data);
