@@ -62,9 +62,9 @@ If you wish to contribute to this project, please fork the repository and submit
 
 ### Author
 For any further questions or clarifications, please contact the author:
-Francis Wanyoike Ng'ang'a
-wanyoike39@gmail.com
-+254 715 353 197
+* Francis Wanyoike Ng'ang'a
+* wanyoike39@gmail.com
+*+254 715 353 197
 
 
 
