@@ -29,24 +29,29 @@ Welcome to the documentation for the Ranci Chess App, a web application develope
 
 Clone the repository:
 
-bash
-Copy code
+```
 git clone https://github.com/Ranci-18/ranci-chess.git
-
+```
 Navigate to the project directory:
 
-bash
+```
 Copy code
 cd ranci-chess
+```
 
 Install dependencies:
-
+```
 Copy code
 npm install
+```
 
+start the server
+```
 Copy code
 npm run start
-Usage
+```
+
+### Usage
 Register/Login.
 Start a new chess game or join an existing one.
 Make your moves on the interactive chessboard.
