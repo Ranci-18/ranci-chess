@@ -35,19 +35,16 @@ git clone https://github.com/Ranci-18/ranci-chess.git
 Navigate to the project directory:
 
 ```
-Copy code
 cd ranci-chess
 ```
 
 Install dependencies:
 ```
-Copy code
 npm install
 ```
 
 start the server
 ```
-Copy code
 npm run start
 ```
 
