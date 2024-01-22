@@ -38,7 +38,7 @@ function App() {
   useEffect(() => {
     if (!isUserTurn && !game.isGameOver()) {
       
-      var stockfish = new Worker('stockfish.js');
+      var stockfish = new Worker('/stockfish.js');
       const fen = game.fen();
       let bMove;
 
@@ -148,7 +148,7 @@ function App() {
         return null;
       }
  
-      var stockfish = new Worker('stockfish.js');
+      var stockfish = new Worker('/stockfish.js');
 
       stockfish.addEventListener('message', function (e) {
         const data = extractCPandDepthData(e.data);

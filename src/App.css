@@ -17,7 +17,7 @@
 
 @media screen and (min-width: 1024px) {
   :root {
-    --board-width: 600px;
+    --board-width: 500px;
   }
 
   .playGame,
