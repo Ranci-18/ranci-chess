@@ -39,7 +39,14 @@ docker pull ranci18/ranci-projects:latest
 docker run -p 8080:3000 -d ranci18/ranci-projects:latest
 ```
 * you can then access it via a loppback link or a network link given
-
+to stop the docker container from running after you're done running the app:
+```
+docker ps
+```
+to get the id of the container, then
+```
+docker stop `${docker-id}`
+```
 or
 
 Clone the repository:
