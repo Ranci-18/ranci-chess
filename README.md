@@ -1,4 +1,4 @@
-# Ranci Chess App Documentation
+# Ranci Chess App Documentation (BETA)
 Welcome to the documentation for the Ranci Chess App, a web application developed using React. This application allows users to play chess online, authenticate using Firebase, and utilizes various libraries such as chess.js, React Chessboard, and Stockfish.js to provide a seamless gaming experience.
 
 ## Table of Contents
@@ -26,6 +26,21 @@ Welcome to the documentation for the Ranci Chess App, a web application develope
 * Setup and Installation
 
 ### To run this application locally, follow these steps:
+Pull the docker image of the app:
+* make sure you have docker installed on your machine.
+run the following commands:
+* pull the image
+```
+docker pull ranci18/ranci-projects:latest
+```
+
+* then run the app
+```
+docker run -p 8080:3000 -d ranci18/ranci-projects:latest
+```
+* you can then access it via a loppback link or a network link given
+
+or
 
 Clone the repository:
 
